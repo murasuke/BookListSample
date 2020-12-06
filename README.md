@@ -60,6 +60,38 @@
         ```
 
 - 6-5 React の導入
+    - app.ts ファイル名を変更する
+        > git mv app.ts app.tsx
+    
+    - webpack.config.js のentryのファイル名も合わせて変更する。
+        > entry: './src/app.tsx',
+
+    - jsxファイルのコンパイルエラーが起こるのでtsconfig.jsonのオプションを変更する(--jsxが設定されていません)
+        > "jsx": "react",
+
+    - webpack-dev-serverの起動時にエラーが発生する。Error: Cannot find module 'webpack-cli/bin/config-yargs'
+        原因は、webpack-cliのver4からから上記パッケージが削除されたため。
+
+        対策「webpack serve」に変更する。（packege.jsonの"scripts"に「"serve": "webpack serve"」を追加する)
+
+    - ブラウザで実行時に非同期関数の実行時エラーが発生する（regeneratorRuntime is not defined）
+        babel-loader 8 でasync/awaitを動作させるためには、@babel/polyfillが必要
+
+        > yarn add @babel/polyfill --dev	
+
+        webpack.config.js の entryを修正する	
+
+	    > entry: ["@babel/polyfill","./src/app.tsx"],
+
+    - 実行時にブラウザ側でReviewのkeyが重複しているという警告が発生する。
+        バックエンド側で生成されたReviewsのIDが重複しているため。
+
+        main.goを修正して、dockerを再起動すれば警告は発生しなくなる。
+        > Reviewsの2件目のIDを「2」に変更する。
+
+
+    
+
 - 6-6 Enzyme を使ったコンポーネントのテスト
 - 6-7 styled-components の導入
 - 7-1 CI/CD によって受けられるメリット
